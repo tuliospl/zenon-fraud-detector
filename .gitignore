@@ -15,7 +15,13 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-data
+
+# Data folder with large files
+data/
+data/*
+*.csv
+*.xlsx
+*.json
 
 ### Eclipse ###
 .apt_generated
