@@ -39,5 +39,10 @@ public class Main {
             true,
             false
         ));
+
+        System.out.println("-----------------------");
+        var listTransactions = new TransactionIngestor().read("data/PS_20174392719_1491204439457_log.csv");
+
+        listTransactions.stream().limit(10).forEach(System.out::println);
     }
 }
