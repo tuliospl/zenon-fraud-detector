@@ -48,5 +48,10 @@ public class Main {
             .ifPresentOrElse(IO::println, () -> IO.println("Transaçao nao encontrada " + existingOriginName));
         long endTimeMap = System.nanoTime();
         IO.println("Tempo de busca map: " + ((endTimeMap - startTimeMap) / 1_000_000.0) + "ms");
+
+        IO.println("-------------------------------------------");
+
+
+
     }
 }
