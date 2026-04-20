@@ -8,13 +8,15 @@ import java.util.Optional;
 
 public class TransactionIngestor {
 
-    List<Transaction> read(String fileName) {
-        Path path = Path.of(fileName);
+    public static final int FRAUD_LIMIT = 50_000;
+
+    List<Transaction> read() {
+        Path path = Path.of("data/PS_20174392719_1491204439457_log.csv");
         try {
             List<String> lines = Files.readAllLines(path);
             return lines. stream()
             .skip(1)
-            .limit(1000)
+            .limit(FRAUD_LIMIT)
             .map(this::parseTransaction)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -33,8 +35,8 @@ public class TransactionIngestor {
             var amount = new BigDecimal(chunks[2]);
             var origin = new TransactionCustomer(chunks[3], new BigDecimal(chunks[4]), new BigDecimal(chunks[5]));
             var recipient = new TransactionCustomer(chunks[6], new BigDecimal(chunks[7]), new BigDecimal(chunks[8]));
-            var isFraud = Boolean.parseBoolean(chunks[9]);
-            var isFlaggedFraud = Boolean.parseBoolean(chunks[10]);
+            var isFraud = "1".equals(chunks[9]);
+            var isFlaggedFraud = "1".equals(chunks[10]);
 
             return Optional.of(new Transaction(step, type, amount, origin, recipient, isFraud, isFlaggedFraud));
         } catch (Exception e) {
