@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class TransactionIngestor {
 
-    public static final int FRAUD_LIMIT = 100_000;
+    public static final int FRAUD_LIMIT = 10_000;
 
     List<Transaction> read() {
         Path path = Path.of("data/PS_20174392719_1491204439457_log.csv");
