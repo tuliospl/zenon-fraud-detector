@@ -1,4 +1,0 @@
-# Database configuration
-database.url=jdbc:mysql://localhost:3306/zenon_frauds
-database.username=root
-database.password=senha123
