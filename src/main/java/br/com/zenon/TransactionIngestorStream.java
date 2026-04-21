@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -16,9 +17,10 @@ public class TransactionIngestorStream {
     public static final int FRAUD_LIMIT = 10_000;
     public static final int BATCH_SIZE = 2_500;
     private final Path path = Path.of("data/PS_20174392719_1491204439457_log.csv");
+    private final Semaphore semaphore = new Semaphore(100);
 
     void readAsBatch(Consumer<List<Transaction>> batchConsumer) {
-        try (ExecutorService executor = Executors.newFixedThreadPool(10);
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
              Stream<String> lines = Files.lines(path).skip(1)){
 
             var iterator = lines.iterator();
@@ -31,7 +33,14 @@ public class TransactionIngestorStream {
                 if (lineBatch.size() >= BATCH_SIZE) {
                     System.out.println("Salvando o batch: " + lineBatch.size());
                     List<String> currentLineBatch = List.copyOf(lineBatch);
-                    executor.submit(() -> executeBatch(currentLineBatch, batchConsumer));
+                    executor.submit(() -> {
+                        try {
+                        executeBatch(currentLineBatch, batchConsumer);
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                            throw new RuntimeException("Error ao salvar o batch", e);
+                        }
+                    });
                     lineBatch.clear();
                 }
             }
@@ -39,7 +48,14 @@ public class TransactionIngestorStream {
             if (!lineBatch.isEmpty()) {
                 System.out.println("Executando o batch final no ingestor");
                 List<String> currentLineBatch = List.copyOf(lineBatch);
-                executor.submit(() -> executeBatch(currentLineBatch, batchConsumer));
+                executor.submit(() -> {
+                    try {
+                        executeBatch(currentLineBatch, batchConsumer);
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("Error ao salvar o batch", e);
+                    }
+                });
             }
 
         } catch (Exception ex) {
@@ -56,7 +72,16 @@ public class TransactionIngestorStream {
             .map(Optional::get)
             .toList();
         System.out.println("Salvando o batch: " + transactionBatch.size());
-        batchConsumer.accept(transactionBatch);
+        try {
+            semaphore.acquire();
+            try {
+                batchConsumer.accept(transactionBatch);
+            } finally {
+                semaphore.release();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     void read(Consumer<Transaction> consumer) {
