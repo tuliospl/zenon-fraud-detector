@@ -26,6 +26,17 @@ public class TransactionMapRepository implements TransactionRepository{
     }
 
     @Override
+    public void saveAll(List<Transaction> transactions) {
+        this.transactionByOriginName.putAll(
+            transactions.stream()
+                .collect(Collectors.toMap(
+                    transaction -> transaction.origin().name(),
+                    transaction -> transaction)
+                )
+        );
+    }
+
+    @Override
     public Optional<Transaction> findByOriginName(String originName) {
         return Optional.ofNullable(transactionByOriginName.get(originName));
     }

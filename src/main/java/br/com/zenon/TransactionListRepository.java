@@ -19,12 +19,15 @@ public class TransactionListRepository implements TransactionRepository {
     }
 
     @Override
+    public void saveAll(List<Transaction> transactions) {
+        this.transactions.addAll(transactions);
+    }
+
+    @Override
     public Optional<Transaction> findByOriginName(String originName) {
         return transactions
             .stream()
             .filter(transaction -> transaction.origin().name().equals(originName))
             .findFirst();
     }
-
-
 }
