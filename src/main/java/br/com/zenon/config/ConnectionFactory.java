@@ -1,4 +1,4 @@
-package br.com.zenon;
+package br.com.zenon.config;
 
 import java.io.IOException;
 import java.io.InputStream;

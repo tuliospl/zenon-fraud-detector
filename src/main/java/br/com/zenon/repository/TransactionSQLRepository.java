@@ -1,4 +1,9 @@
-package br.com.zenon;
+package br.com.zenon.repository;
+
+import br.com.zenon.model.TransactionType;
+import br.com.zenon.config.ConnectionFactory;
+import br.com.zenon.model.Transaction;
+import br.com.zenon.model.TransactionCustomer;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -8,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class TransactionSQLRepository implements TransactionRepository{
+public class TransactionSQLRepository implements TransactionRepository {
 
     public void save(Transaction transaction) {
         String sql = """

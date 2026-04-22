@@ -1,4 +1,7 @@
-package br.com.zenon;
+package br.com.zenon.application;
+
+import br.com.zenon.repository.TransactionSQLRepository;
+import br.com.zenon.service.TransactionIngestorStream;
 
 public class IngestionMain {
 
