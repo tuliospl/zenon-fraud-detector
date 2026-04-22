@@ -1,4 +1,8 @@
-package br.com.zenon;
+package br.com.zenon.application;
+
+import br.com.zenon.model.Transaction;
+import br.com.zenon.repository.TransactionSQLRepository;
+import br.com.zenon.service.TransactionIngestor;
 
 import java.util.List;
 

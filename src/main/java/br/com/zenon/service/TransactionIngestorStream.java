@@ -1,4 +1,8 @@
-package br.com.zenon;
+package br.com.zenon.service;
+
+import br.com.zenon.model.TransactionType;
+import br.com.zenon.model.Transaction;
+import br.com.zenon.model.TransactionCustomer;
 
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -8,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -17,10 +20,9 @@ public class TransactionIngestorStream {
     public static final int FRAUD_LIMIT = 10_000;
     public static final int BATCH_SIZE = 2_500;
     private final Path path = Path.of("data/PS_20174392719_1491204439457_log.csv");
-    private final Semaphore semaphore = new Semaphore(100);
 
-    void readAsBatch(Consumer<List<Transaction>> batchConsumer) {
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    public void readAsBatch(Consumer<List<Transaction>> batchConsumer) {
+        try (ExecutorService executor = Executors.newFixedThreadPool(10);
              Stream<String> lines = Files.lines(path).skip(1)){
 
             var iterator = lines.iterator();
@@ -37,7 +39,6 @@ public class TransactionIngestorStream {
                         try {
                         executeBatch(currentLineBatch, batchConsumer);
                         }catch (Exception e) {
-                            e.printStackTrace();
                             throw new RuntimeException("Error ao salvar o batch", e);
                         }
                     });
@@ -71,17 +72,8 @@ public class TransactionIngestorStream {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .toList();
-        System.out.println("Salvando o batch: " + transactionBatch.size());
-        try {
-            semaphore.acquire();
-            try {
-                batchConsumer.accept(transactionBatch);
-            } finally {
-                semaphore.release();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+
+        batchConsumer.accept(transactionBatch);
     }
 
     void read(Consumer<Transaction> consumer) {

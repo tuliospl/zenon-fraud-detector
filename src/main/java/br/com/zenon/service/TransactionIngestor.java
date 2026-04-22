@@ -1,4 +1,8 @@
-package br.com.zenon;
+package br.com.zenon.service;
+
+import br.com.zenon.model.TransactionType;
+import br.com.zenon.model.Transaction;
+import br.com.zenon.model.TransactionCustomer;
 
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -10,7 +14,7 @@ public class TransactionIngestor {
 
     public static final int FRAUD_LIMIT = 10_000;
 
-    List<Transaction> read() {
+    public List<Transaction> read() {
         Path path = Path.of("data/PS_20174392719_1491204439457_log.csv");
         try {
             List<String> lines = Files.readAllLines(path);

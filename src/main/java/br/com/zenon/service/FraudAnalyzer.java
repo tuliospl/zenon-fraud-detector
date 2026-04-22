@@ -1,4 +1,7 @@
-package br.com.zenon;
+package br.com.zenon.service;
+
+import br.com.zenon.model.TransactionType;
+import br.com.zenon.model.Transaction;
 
 import java.math.BigDecimal;
 import java.util.Comparator;

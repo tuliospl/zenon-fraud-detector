@@ -1,4 +1,4 @@
-package br.com.zenon;
+package br.com.zenon.service;
 
 import java.math.BigDecimal;
 import java.nio.file.Files;
