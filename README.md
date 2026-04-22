@@ -13,17 +13,6 @@ O Zenon Fraud Detector é uma aplicação Java que lê arquivos de transações 
 - Java 21+
 - Gradle 9.2
 
-## Estrutura do Projeto
-
-```
-src/main/java/br/com/zenon/
-├── Main.java                 # Ponto de entrada da aplicação
-├── Transaction.java          # Modelo de dados da transação
-├── TransactionCustomer.java  # Dados do cliente (origem/destino)
-├── TransactionIngestor.java  # Leitor de arquivos CSV
-└── TransactionType.java      # Tipos de transação
-```
-
 ## Modelo de Dados
 
 ### Transaction
@@ -102,9 +91,8 @@ step,type,amount,nameOrig,oldbalanceOrg,newbalanceOrig,nameDest,oldbalanceDest,n
 
 - [x] Modelo de dados
 - [x] Ingestão de arquivos CSV
-- [ ] Lógica de detecção de fraudes
-- [ ] Testes unitários
-- [ ] Relatórios de análise
+- [x] Lógica de detecção de fraudes
+- [x] Relatórios de análise
 
 ## Licença
 
