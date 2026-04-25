@@ -6,8 +6,6 @@ Sistema de detecção de fraudes em transações financeiras.
 
 O Zenon Fraud Detector é uma aplicação Java que lê arquivos de transações financeiras (CSV) e identifica possíveis fraudes. O projeto utiliza datasets no formato PaySim, que simula transações de dinheiro móvel.
 
-**Status:** 🚧 Em desenvolvimento
-
 ## Tecnologias
 
 - Java 21+
